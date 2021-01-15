@@ -83,6 +83,18 @@ fn match_u8(num: u8) {
 }
 
 fn main() {
+    v2();
+}
+
+fn v2() {
+    let add = |a: i32, b: i32| {
+        return a + b;
+    };
+
+    println!("{}", add(3, 4));
+}
+
+fn v1() {
     let mut x = 5;
     println!("{}", x);
 
@@ -209,6 +221,39 @@ fn main() {
     print_hashmap(&mut map);
 
     // panic!("Crash");
+
+    let article = Article {
+        headline: String::from("headline"),
+        content: String::from("content"),
+    };
+
+    let a = if article.headline == "headline1" {
+        "1"
+    } else if article.headline == "headline2" {
+        "2"
+    } else {
+        "3"
+    };
+
+    println!("{}", a);
+
+    println!("{}", article.summarize());
+
+    sum(&article);
+
+    let r;
+
+    r = {
+        let x = 5;
+        x
+        // r = create_sth();
+    };
+
+    println!("{}", r);
+}
+
+fn create_sth() -> i32 {
+    5
 }
 
 fn borrow_sth(sth: String) -> String {
@@ -224,6 +269,7 @@ fn print_hashmap(map: &mut HashMap<NumberView, &str>) {
     map.insert(NumberView::ONE, "ASD");
 }
 
+#[derive(Debug, PartialEq, Eq, Hash)]
 enum NumberView {
     ONE,
     TWO,
@@ -260,4 +306,37 @@ fn largest(list: &[i32]) -> i32 {
     println!("{}", NumberView::ONE.value());
 
     *largest
+}
+
+pub trait Summary {
+    fn summarize(&self) -> String;
+}
+
+pub struct Article {
+    pub headline: String,
+    pub content: String,
+}
+
+impl Summary for Article {
+    fn summarize(&self) -> String {
+        format!("{}, {}", self.content, self.headline)
+    }
+}
+
+pub fn sum(item: &impl Summary) {
+    println!("{}", item.summarize());
+}
+
+pub fn sum2<T>(item: &T)
+where
+    T: Summary,
+{
+}
+
+#[cfg(test)]
+mod test {
+    #[test]
+    fn test() {
+        assert_eq!(2 + 2, 4);
+    }
 }
